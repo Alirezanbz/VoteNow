@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #e1e4ff;
+    }
+
+    .container {
+      width: 300px;
+      padding: 20px;
+      border-radius: 5px;
+      background-color: #eaecff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .error {
+      color: red;
+      margin-top: 5px;
+    }
+
+    input[type="submit"] {
+      padding: 10px;
+      background-color: #3a3d57;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Login</h2>
+
+  <form th:action="@{/login}" method="post">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" th:value="${email}" required>
+
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <div th:if="${error}" class="error" style="text-align: center;">
+      <p th:text="${error}"></p>
+    </div>
+
+    <input type="submit" value="Login">
+    <p><a th:href="@{/login/forgot-password}">Forgot Password?</a></p>
+    <p>Don't have an account? <a th:href="@{/registration}">Create Account</a></p>
+
+  </form>
+</div>
+</body>
+</html>

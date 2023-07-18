@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="${frage.title}"></title>
+    <link th:href="@{/frage_stylesheet.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+<h1 th:text="${frage.title}"></h1>
+<h2 th:text="${frage.vorschlagDeadline}"></h2>
+<h2 th:text="${frage.antwortDeadline}"></h2>
+
+<form id="ratingForm" action="/save-ratings" method="POST">
+    <table id="table">
+        <tr>
+            <th>Vorschlag</th>
+            <th>Beschreibung</th>
+            <th>Rate</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr th:each="vorschlag: ${frage.vorschlaege}">
+            <td th:text="${vorschlag.text}"></td>
+            <td th:text="${vorschlag.description}"></td>
+            <td>
+                <div class="slider-container">
+                    <label>Fully Agree</label>
+                    <div class="slider"></div>
+                    <label>Completely Disagree</label>
+                    <input type="hidden" th:name="'rating_'+${vorschlag.id}" th:id="'rating_'+${vorschlag.id}" />
+                </div>
+                <span class="slider-value">0</span>
+               
+            </td>
+        </tr>
+    </table>
+    <div class="button-container">
+        <button id="submitBtn" type="button" onclick="submitRatings()">Submit Ratings</button>
+
+
+        <a th:href="@{/createvorschlag(frageId = ${frage.id})}">Neue Vorschlag Eintragen</a>
+    </div>
+
+</form>
+
+<div th:if="${alreadyRated}" class="error-message">
+    You have already rated this Vorschlag.
+</div>
+<style>
+    .error-message {
+        color: red;
+        font-size: larger;
+        margin-top: 10px;
+    }
+</style>
+<script>
+    function submitRatings() {
+        // submit the form using traditional form submission
+        document.getElementById("ratingForm").submit();
+    }
+</script>
+
+<script>
+    $(function () {
+        $(".slider").slider({
+            min: 0,
+            max: 10,
+            range: "min",
+            create: function (event, ui) {
+                // Initialize the hidden input with the initial value of the slider
+                var value = $(this).slider("value");
+                $(this).parent().find('input').val(value);
+
+                // Color logic
+                var color = 'red';
+                if (value <= 2) {
+                    color = 'green';
+                } else if (value <= 7) {
+                    color = 'yellow';
+                }
+
+                $(this).find('.ui-slider-range').css('background', color);
+                $(this).parent().next('.slider-value').text(value);
+                document.getElementById("submitBtn").addEventListener("click", submitRatings);
+            },
+            slide: function (event, ui) {
+                var value = ui.value;
+                $(this).parent().find('input').val(value);
+                $(this).parent().next('.slider-value').text(value);
+                var color = 'red';
+                if (value <= 2) {
+                    color = 'green';
+                } else if (value <= 7) {
+                    color = 'yellow';
+                }
+
+                // Update the hidden input and the text display with the current slider value
+
+                $(this).find('.ui-slider-range').css('background', color);
+            },
+
+        });
+    });
+</script>
+
+
+</body>
+</html>

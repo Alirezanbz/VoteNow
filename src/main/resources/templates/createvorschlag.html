@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Vorschlag Eintragen</title>
+  <link th:href="@{/createvorschlag_stylesheet.css}" rel="stylesheet">
+</head>
+<body>
+<h1>Vorschlag Eintragen:</h1>
+  <form method="post" th:object="${vorschlag}" th:action="@{/handlecreatevorschlag(frageId = ${frage.id})}">
+
+    <input type="hidden" th:field="*{id}">
+    <input type="text" placeholder="Vorschlag" th:field="*{text}">
+    <input type="text" placeholder="Beschreibung" th:field="*{description}">
+    <input type="hidden" th:field="*{frage}">
+    <input type="submit" value="Submit">
+  </form>
+<p th:text="${frage.title}"></p>
+</body>
+</html>

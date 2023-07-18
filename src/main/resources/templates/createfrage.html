@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Frage Erstellen</title>
+    <link th:href="@{/createfrage_stylesheet.css}" rel="stylesheet">
+</head>
+<body>
+<h1>Frage Erstellen:</h1>
+<form method="post" th:object="${frage}" th:action="@{/handlecreatefrage}">
+    <input type="text" placeholder="Title" th:field="*{title}">
+    <input type="date" th:field="*{vorschlagDeadline}">
+    <input type="hidden" th:field="*{id}">
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

@@ -1,0 +1,96 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+a {
+    display: inline-block;
+    margin-top: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #4caf50;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+
+a:hover {
+    background-color: #45a049;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.slider-container label {
+    margin: 0px 1px;  /* Adjust as needed */
+    font-size: 0.8em;  /* Adjust as needed */
+}
+
+.slider {
+    width: 30%;  /* Adjust as needed */
+    margin: 0 3px;
+}
+
+.ui-slider {
+    height: 5px;  /* Adjust as needed */
+}
+
+.ui-slider .ui-slider-handle {
+    top: -6px;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background: #4CAF50;
+}
+
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.button-container button {
+    margin: 0 5px;
+    display: inline-block;
+    margin-top: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #4caf50;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.button-container button:hover {
+    background-color: #45a049;
+}

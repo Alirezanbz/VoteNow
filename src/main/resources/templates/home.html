@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <link th:href="@{/homepage_stylesheet.css}" rel="stylesheet">
+</head>
+<body>
+<h1>Themen</h1>
+<div class = "container">
+    <a th:href="@{/createfrage}">Neue Frage Erstellen</a>
+    <table id="table">
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+        </tr>
+        <tr th:each="frage: ${fragen}">
+            <td><a th:text="${frage.title}" th:href="@{/frage (frageId = ${frage.id})}"></a></td>
+            <td>-</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
