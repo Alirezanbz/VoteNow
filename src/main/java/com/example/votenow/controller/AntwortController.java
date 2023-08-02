@@ -34,6 +34,7 @@ public class AntwortController {
     public String saveRatings(@RequestParam Map<String, String> ratings, HttpServletRequest request, Model model) {
         boolean hasUserAlreadyRated = false;
         for (Map.Entry<String, String> entry : ratings.entrySet()) {
+
             String[] parts = entry.getKey().split("_");
 
             if (parts.length < 2) {
@@ -63,6 +64,7 @@ public class AntwortController {
         Vorschlag vorschlag = vorschlagService.getVorschlag(vorschlagId);
 
 
+
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("loggedInUser");
 
@@ -75,7 +77,7 @@ public class AntwortController {
 
         Antwort antwort = new Antwort(rating);
         antwort.setVorschlag(vorschlag);
-        antwort.setUser(user);  // set the user
+        antwort.setUser(user);
         antwortService.createAntwort(vorschlagId, antwort);
         return false;
 

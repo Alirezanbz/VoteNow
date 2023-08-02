@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auswertung Page</title>
+    <link th:href="@{/homepage_stylesheet.css}" rel="stylesheet">
+    <style>
+        .circle {
+            height: 25px;
+            width: 25px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .red { background-color: red; }
+        .yellow { background-color: yellow; }
+        .green { background-color: green; }
+
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            background-color: transparent;
+            padding: 0;
+            display: inline;
+            border: none;
+            box-shadow: none;
+            margin-top: 0;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<h1>Auswertung</h1>
+<div class = "container">
+    <table id="table">
+        <tr>
+            <th></th>
+            <th>Vorschlag Text</th>
+            <th>Average Rating</th>
+        </tr>
+        <tr th:each="entry: ${averageRatings}">
+            <td>
+                <div th:class="${'circle ' + vorschlagColor.get(entry.key).toString().toLowerCase()}"></div>
+            </td>
+            <td>
+                <a th:href="@{/vorschlagdetails(vorschlagId=${entry.key.id})}" th:text="${entry.key.text}"></a>
+            </td>
+            <td th:text="${entry.value}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

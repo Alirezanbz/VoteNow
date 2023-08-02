@@ -32,9 +32,14 @@ public class Frage {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date antwortDeadline;
 
+    @NonNull
     @ManyToOne(optional = true)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     @OneToMany(mappedBy = "frage", cascade = CascadeType.ALL)
     private List<Vorschlag> vorschlaege;

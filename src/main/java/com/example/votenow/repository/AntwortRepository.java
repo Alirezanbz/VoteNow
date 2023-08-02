@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface AntwortRepository extends CrudRepository<Antwort, Long> {
     public List<Antwort> findAllByVorschlagId(Long vorschlagId);
     List<Antwort> findByVorschlagAndUser(Vorschlag vorschlag, User user);
+
+    List<Antwort> findByUser(User user);
 }

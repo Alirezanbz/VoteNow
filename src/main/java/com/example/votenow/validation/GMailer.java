@@ -50,7 +50,7 @@ public class GMailer {
     private static Credential getCredentials(final NetHttpTransport httpTransport, GsonFactory jsonFactory)
             throws IOException {
 
-        InputStream in = GMailer.class.getResourceAsStream("/client_secret_654417122024-b0jdr9tdhi4i5q70768476oc3e3d3b3h.apps.googleusercontent.com.json");
+        InputStream in = GMailer.class.getResourceAsStream("/client_secret_654417122024-di1tcbr5v461plq8etlcq58tg4nen7vk.apps.googleusercontent.com.json");
 
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(jsonFactory, new InputStreamReader(in));

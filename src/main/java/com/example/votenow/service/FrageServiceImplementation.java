@@ -1,8 +1,10 @@
 package com.example.votenow.service;
 
 import com.example.votenow.entity.Frage;
+import com.example.votenow.entity.User;
 import com.example.votenow.exception.FrageNotFoundException;
 import com.example.votenow.repository.FrageRepository;
+import com.example.votenow.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,16 @@ public class FrageServiceImplementation implements FrageService{
     @Autowired
     FrageRepository frageRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Override
-    public Frage createFrage(Frage frage) {
+    public Frage createFrage(Frage frage, int userID) {
+        User user = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
+        frage.setUser(user);
+        frage.setIsActive(true);
         setAntwortDeadline(frage);
+
         return (Frage) frageRepository.save(frage);
     }
 
@@ -55,13 +64,19 @@ public class FrageServiceImplementation implements FrageService{
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(frage.getVorschlagDeadline());
 
-// Add one month to the Calendar instance
+
         calendar.add(Calendar.MONTH, 1);
 
-// Get the resulting date as a Date object
+
         Date antwortDeadline = calendar.getTime();
 
-// Set the antwortDeadline value in your object
         frage.setAntwortDeadline(antwortDeadline);
+    }
+
+    private void updateFrageStatus(Frage frage) {
+        if(new Date().after(frage.getAntwortDeadline())) {
+            frage.setIsActive(false);
+            frageRepository.save(frage);
+        }
     }
 }

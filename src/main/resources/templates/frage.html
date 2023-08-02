@@ -66,6 +66,7 @@
         // submit the form using traditional form submission
         document.getElementById("ratingForm").submit();
     }
+
 </script>
 
 <script>
@@ -75,7 +76,7 @@
             max: 10,
             range: "min",
             create: function (event, ui) {
-                // Initialize the hidden input with the initial value of the slider
+
                 var value = $(this).slider("value");
                 $(this).parent().find('input').val(value);
 

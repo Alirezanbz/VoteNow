@@ -66,4 +66,14 @@ public class VorschlagServiceImplementation implements VorschlagService {
             } else throw new VorschlagNotFoundException(vorschlag.getId());
         } else throw new FrageNotFoundException(frageId);
     }
+
+    @Override
+    public List<Vorschlag> getAllVorschlaege() {
+        return vorschlagRepository.findAll();
+    }
+
+    public List<Vorschlag> getVorschlaegeByFrageId(Long frageId) {
+
+        return vorschlagRepository.findByFrageId(frageId);
+    }
 }

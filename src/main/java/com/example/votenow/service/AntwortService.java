@@ -12,6 +12,7 @@ public interface AntwortService {
 
     public boolean hasUserAlreadyRated(Vorschlag vorschlag, User user);
 
+
     public void deleteAntwort(Long id);
     public List<Antwort> getAntworten(Long optionId);
     public Antwort updateAntwort(Antwort antwort);

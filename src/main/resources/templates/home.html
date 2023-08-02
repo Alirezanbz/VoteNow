@@ -13,12 +13,44 @@
         <tr>
             <th>Title</th>
             <th>Status</th>
+            <th>Action</th>
         </tr>
         <tr th:each="frage: ${fragen}">
-            <td><a th:text="${frage.title}" th:href="@{/frage (frageId = ${frage.id})}"></a></td>
-            <td>-</td>
+            <td>
+                <a th:href="${frage.isActive} ? @{/frage (frageId = ${frage.id})} : '#'"
+                   th:text="${frage.title}">Link</a>
+            </td>
+            <td th:text ="${frage.isActive} ? 'Active' : 'Closed'"></td>
+            <td th:if="${frage.user.id} == ${userId}">
+                <button th:attr="onclick='toggleFrage(' + ${frage.id} + ');'" th:text="${frage.isActive} ? 'Close' : 'Open'">Toggle</button>
+            </td>
+            <td>
+                <a th:href="@{/auswertung (frageId = ${frage.id})}">Auswertung anzeigen</a>
+            </td>
+
+
         </tr>
+
     </table>
 </div>
 </body>
 </html>
+<script>
+    function toggleFrage(frageId) {
+        fetch('/toggleFrage/' + frageId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(() => {
+                location.reload();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+
+
+</script>
