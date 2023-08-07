@@ -10,7 +10,8 @@ public interface AntwortService {
     public Object getAntwort(Long id);
     public Antwort createAntwort(Long vorschlagId, Antwort antwort);
 
-    public boolean hasUserAlreadyRated(Vorschlag vorschlag, User user);
+    public boolean hasUserAlreadyRated(Vorschlag vorschlag, User user, String userHash, Boolean anonymousVote);
+
 
 
     public void deleteAntwort(Long id);

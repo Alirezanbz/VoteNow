@@ -23,14 +23,6 @@ public class Frage {
     @Column(name = "title")
     private String title;
 
-    @NonNull
-    @Column(name = "vorschlag_deadline")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date vorschlagDeadline;
-
-    @Column(name = "antwort_deadline")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date antwortDeadline;
 
     @NonNull
     @ManyToOne(optional = true)
@@ -41,6 +33,18 @@ public class Frage {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "is_vorschlag_phase")
+    private Boolean isVorschlagPhase;
+
     @OneToMany(mappedBy = "frage", cascade = CascadeType.ALL)
     private List<Vorschlag> vorschlaege;
-}
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name =  "creation_date")
+    private Date creationDate;
+
+    @PrePersist
+    protected void onCreate(){
+        creationDate = new Date();
+    }
+    }

@@ -1,6 +1,6 @@
 package com.example.votenow.service;
 
-import com.example.votenow.entity.User;
+import com.example.votenow.configuration.Pair;
 import com.example.votenow.entity.Vorschlag;
 import com.example.votenow.entity.Antwort;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,18 +66,22 @@ public class AuswertungService {
 
         return vorschlagColor;
     }
-    public Map<User,Integer> getUserRatings(Long vorschlagId){
 
-        Map<User, Integer> userRatings = new HashMap<>();
+    public List<Pair<String, Integer>> getUserRatings(Long vorschlagId){
+        List<Pair<String, Integer>> userRatings = new ArrayList<>();
         Vorschlag vorschlag = vorschlagService.getVorschlag(vorschlagId);
 
         for (Antwort antwort : antwortService.getAntworten(vorschlag.getId())){
-
-            userRatings.put(antwort.getUser(),antwort.getWert());
+            if (antwort.getUser() == null) {
+                userRatings.add(new Pair<>("Anonymous", antwort.getWert()));
+            } else {
+                userRatings.add(new Pair<>(antwort.getUser().getName(), antwort.getWert()));
+            }
         }
         return userRatings;
-
     }
+
+
 
 
 }

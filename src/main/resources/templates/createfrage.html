@@ -12,7 +12,6 @@
 <h1>Frage Erstellen:</h1>
 <form method="post" th:object="${frage}" th:action="@{/handlecreatefrage}">
     <input type="text" placeholder="Title" th:field="*{title}">
-    <input type="date" th:field="*{vorschlagDeadline}">
     <input type="hidden" th:field="*{id}">
     <input type="submit" value="Submit">
 </form>

@@ -17,14 +17,16 @@
         </tr>
         <tr th:each="frage: ${fragen}">
             <td>
-                <a th:href="${frage.isActive} ? @{/frage (frageId = ${frage.id})} : '#'"
+                <a th:href="${frage.isActive && !votedFragen.contains(frage)} ? @{/frage (frageId = ${frage.id})} : '#'"
                    th:text="${frage.title}">Link</a>
             </td>
             <td th:text ="${frage.isActive} ? 'Active' : 'Closed'"></td>
-            <td th:if="${frage.user.id} == ${userId}">
-                <button th:attr="onclick='toggleFrage(' + ${frage.id} + ');'" th:text="${frage.isActive} ? 'Close' : 'Open'">Toggle</button>
+            <td th:if="${frage.user.id} == ${userId} and ${frage.isActive}">
+                <button th:attr="onclick='endRating(' + ${frage.id} + ');'" th:text="'End Rating'">End Rating</button>
             </td>
-            <td>
+
+
+            <td th:if="${!frage.isActive}">
                 <a th:href="@{/auswertung (frageId = ${frage.id})}">Auswertung anzeigen</a>
             </td>
 
@@ -36,19 +38,23 @@
 </body>
 </html>
 <script>
-    function toggleFrage(frageId) {
-        fetch('/toggleFrage/' + frageId, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(() => {
-                location.reload();
+
+    function endRating(frageId) {
+        var confirmEnd = confirm("Are you sure you want to end the rating?");
+        if (confirmEnd == true) {
+            fetch('/endRating/' + frageId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+                .then(() => {
+                    location.reload();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
     }
 
 

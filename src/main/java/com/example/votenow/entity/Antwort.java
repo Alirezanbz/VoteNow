@@ -20,11 +20,19 @@ public class Antwort {
     @NonNull
     private Integer wert;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     private User user;
+
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "vorschlagID", referencedColumnName = "id")
     private Vorschlag vorschlag;
+
+    @Column(name = "anonymous", nullable = false)
+    private Boolean anonymous = false;
+
+    private String userHash;
+
+
 }

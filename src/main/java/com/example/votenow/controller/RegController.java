@@ -3,6 +3,7 @@ package com.example.votenow.controller;
 
 import com.example.votenow.entity.User;
 import com.example.votenow.repository.UserRepository;
+import com.example.votenow.service.MailSenderService;
 import com.example.votenow.validation.GMailer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -21,15 +22,15 @@ public class RegController {
 
     private final UserRepository userRepository;
 
-    private final GMailer gMailer;
+    private final MailSenderService mailSender;
 
 
 
     public static String verificationCode;
 
-    public RegController(UserRepository userRepository, GMailer gMailer) {
+    public RegController(UserRepository userRepository, MailSenderService mailSender) {
         this.userRepository = userRepository;
-        this.gMailer = gMailer;
+        this.mailSender = mailSender;
     }
 
 
@@ -50,8 +51,8 @@ public class RegController {
             return mav;
         }
 
-        gMailer.sendVerificationEmail(user.getEmail());
-        verificationCode = gMailer.getVerificationCode();
+        mailSender.sendVerificationEmail(user.getEmail());
+        verificationCode = mailSender.getVerificationCode();
         try {
             user.setStatus(false);
             userRepository.save(user);

@@ -52,11 +52,18 @@
             } else throw new AntwortNotFoundException(newAntwort.getId());
         }
         @Override
-        public boolean hasUserAlreadyRated(Vorschlag vorschlag, User user){
-            List<Antwort> existingAntwort = antwortRepository.findByVorschlagAndUser(vorschlag, user);
-            return !existingAntwort.isEmpty();
-
+        public boolean hasUserAlreadyRated(Vorschlag vorschlag, User user, String userHash, Boolean anonymousVote){
+            // Check if this user, identified by userID or userHash, has already voted for this vorschlag
+            if (anonymousVote) {
+                // In case of an anonymous vote, we only check against the userHash.
+                return !antwortRepository.findByVorschlagAndUserHash(vorschlag, userHash).isEmpty();
+            } else {
+                // In case of a non-anonymous vote, we check against the user's ID.
+                // In addition, we also check the userHash to prevent multiple anonymous votes from the same user.
+                return !antwortRepository.findByVorschlagAndUserOrUserHash(vorschlag, user, userHash).isEmpty();
+            }
         }
+
 
 
     }

@@ -6,6 +6,7 @@ import com.example.votenow.exception.FrageNotFoundException;
 import com.example.votenow.repository.FrageRepository;
 import com.example.votenow.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -22,11 +23,11 @@ public class FrageServiceImplementation implements FrageService{
     UserRepository userRepository;
 
     @Override
-    public Frage createFrage(Frage frage, int userID) {
+    public Frage createFrage(Frage frage, Long userID) {
         User user = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
         frage.setUser(user);
         frage.setIsActive(true);
-        setAntwortDeadline(frage);
+        frage.setIsVorschlagPhase(true);
 
         return (Frage) frageRepository.save(frage);
     }
@@ -60,23 +61,18 @@ public class FrageServiceImplementation implements FrageService{
         return (List<Frage>) frageRepository.findAll();
     }
 
-    public void setAntwortDeadline(Frage frage) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(frage.getVorschlagDeadline());
 
-
-        calendar.add(Calendar.MONTH, 1);
-
-
-        Date antwortDeadline = calendar.getTime();
-
-        frage.setAntwortDeadline(antwortDeadline);
+    @Override
+    public Frage toggleVorschlagPhase(Long frageId){
+        Frage frage = frageRepository.findById(frageId).orElseThrow(()->new FrageNotFoundException(frageId));
+        frage.setIsVorschlagPhase(!frage.getIsVorschlagPhase());
+        return frageRepository.save(frage);
     }
 
-    private void updateFrageStatus(Frage frage) {
-        if(new Date().after(frage.getAntwortDeadline())) {
-            frage.setIsActive(false);
-            frageRepository.save(frage);
-        }
+    @Override
+    public List<Frage> getVotedFragen(Long userId, String userHash) {
+        return frageRepository.findVotedFragenByUserOrHash(userId, userHash);
     }
+
+
 }

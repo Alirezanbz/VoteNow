@@ -4,7 +4,7 @@ import com.example.votenow.entity.ResetPasswordToken;
 import com.example.votenow.entity.User;
 import com.example.votenow.repository.ResetPasswordTokenRepository;
 import com.example.votenow.repository.UserRepository;
-import com.example.votenow.validation.GMailer;
+import com.example.votenow.service.MailSenderService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -23,14 +23,14 @@ public class LoginController {
 
     private final ResetPasswordTokenRepository resetPasswordTokenRepository;
 
-    private final GMailer gMailer;
+    private final MailSenderService mailSender;
 
     ResetPasswordToken resetPasswordToken;
 
-    public LoginController(UserRepository userRepository, ResetPasswordTokenRepository resetPasswordTokenRepository, GMailer gMailer) {
+    public LoginController(UserRepository userRepository, ResetPasswordTokenRepository resetPasswordTokenRepository, MailSenderService mailSender) {
         this.userRepository = userRepository;
         this.resetPasswordTokenRepository = resetPasswordTokenRepository;
-        this.gMailer = gMailer;
+        this.mailSender = mailSender;
     }
 
     @GetMapping("/login")
@@ -39,7 +39,7 @@ public class LoginController {
         return "login";
     }
 
-    // Inside your LoginController
+
     @PostMapping("/login")
     public String processLogin(@RequestParam("email") String email, @RequestParam("password") String password, Model model, HttpServletRequest request) {
         User user = userRepository.findByEmail(email);
@@ -71,8 +71,14 @@ public class LoginController {
 
         if (user != null) {
 
-            String token = gMailer.generateToken();
+            String token = mailSender.generateToken();
             LocalDateTime expiryDate = LocalDateTime.now().plusDays(2);
+
+            ResetPasswordToken existingToken = resetPasswordTokenRepository.findByUser(user);
+            if (existingToken != null) {
+
+                resetPasswordTokenRepository.delete(existingToken);
+            }
 
             ResetPasswordToken resetPasswordToken = new ResetPasswordToken();
             resetPasswordToken.setUser(user);
@@ -82,7 +88,7 @@ public class LoginController {
             resetPasswordTokenRepository.save(resetPasswordToken);
 
 
-            gMailer.sendResetPasswordEmail(email,token);
+            mailSender.sendResetPasswordEmail(email,token);
             model.addAttribute("message", "A reset password email has been sent to your email address.");
         } else {
 

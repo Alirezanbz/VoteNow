@@ -28,7 +28,6 @@ import java.util.*;
 import static com.google.api.services.gmail.GmailScopes.*;
 import static javax.mail.Message.*;
 
-@Component
 public class GMailer {
     private static final String TEST_EMAIL = "nabavizadehseyedalireza@gmail.com";
     private String verificationCode;
