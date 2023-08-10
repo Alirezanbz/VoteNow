@@ -16,8 +16,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-
     @Column(unique = true)
     @Pattern(regexp=".+@gmail\\.com$", message="Email should be in the format of name@gmail.com")
     private String email;

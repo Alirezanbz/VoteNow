@@ -4,31 +4,51 @@
   <meta charset="UTF-8">
   <title>Login</title>
   <style>
+
     body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       font-family: Arial, sans-serif;
-      background-color: #e1e4ff;
+      background-color: #f4f4f4;
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .header {
+      background-color: #515151;
+      padding: 10px 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-logo {
+      width: 250px;
+      height: auto;
+      margin-left: 20px;
+    }
+
+    .header-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0 20px;
+    }
+
+    nav ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    nav li {
+      display: inline-block;
+      margin-left: 70px;
     }
 
     .container {
       width: 300px;
+      margin: 20px auto;
       padding: 20px;
+      background-color: #ffffff;
       border-radius: 5px;
-      background-color: #eaecff;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
 
     label {
@@ -55,29 +75,66 @@
       color: #fff;
       border: none;
       cursor: pointer;
+      margin-top: 10px;
     }
+
+    a {
+      display: inline-block;
+      padding: 8px 15px;
+      background-color: #e0b44e;
+      color: #fff;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+
+    a:hover {
+      background-color: #bd9740;
+    }
+    .input-group label {
+      display: inline-block;
+      width: 100px;
+      text-align: right;
+      margin-right: 10px;
+    }
+
+    .button-container {
+      text-align: center;
+    }
+
   </style>
 </head>
 <body>
+<header class="header">
+  <div class="header-container">
+    <img th:src="@{/actum_logo.png}" alt="Your Logo" class="header-logo">
+    <nav>
+    </nav>
+  </div>
+</header>
 <div class="container">
-  <h2>Login</h2>
-
+  <h2 style="text-align: center;">Login</h2>
   <form th:action="@{/login}" method="post">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" th:value="${email}" required>
+    <div class="input-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" th:value="${email}" required>
+    </div>
 
-
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
+    <div class="input-group">
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
 
     <div th:if="${error}" class="error" style="text-align: center;">
       <p th:text="${error}"></p>
     </div>
 
-    <input type="submit" value="Login">
+    <div class="button-container">
+      <input type="submit" value="Login">
+    </div>
     <p><a th:href="@{/login/forgot-password}">Forgot Password?</a></p>
     <p>Don't have an account? <a th:href="@{/registration}">Create Account</a></p>
-
   </form>
 </div>
 </body>

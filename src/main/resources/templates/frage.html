@@ -4,13 +4,231 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title th:text="${frage.title}"></title>
-    <link th:href="@{/frage_stylesheet.css}" rel="stylesheet">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .header {
+            background-color: #515151;
+            padding: 10px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header::after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .header-logo {
+            height: 50px;
+            margin-right: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            float: right;
+        }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        nav li {
+            display: inline-block;
+            margin-left: 70px;
+            padding-top: 18px;
+            position: relative;
+        }
+
+        nav .nav-link {
+            background-color: #515151;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            color: #e0b44e;
+        }
+
+        nav .nav-link:hover {
+            background-color: #404040;
+        }
+
+        nav a::before {
+            content: '';
+            display: block;
+            height: 5px;
+            background-color: #e0b44e;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+        }
+
+        nav a:hover::before {
+            width: 100%;
+            background-color: #e0b44e;
+        }
+        #table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 16px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        #table th, #table td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        #table th {
+            background-color: #f2f2f2;
+            color: black;
+        }
+
+        #table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .slider-image {
+            width: 30px;
+            height: auto;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .slider-image#happy-icon {
+            order: 1;
+            margin-right: 8px
+        }
+
+        .slider {
+            order: 2;
+            flex-grow: 1;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+
+        .slider-image#sad-icon {
+            order: 3;
+            margin-left: 8px;
+        }
+        .ui-slider {
+            background: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #dcdcdc;
+            height: 10px;
+        }
+
+        .ui-slider .ui-slider-handle {
+            background: #f9f9f9;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            width: 25px;
+            height: 25px;
+            top: -7.5px;
+            transition: background-color 0.3s;
+        }
+
+        .ui-slider .ui-slider-range {
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+
+
+        a {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #e0b44e;
+            color: #fff;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            text-decoration: none;
+        }
+
+        a:hover {
+            background-color: #bd9740;
+            text-decoration: none;
+        }
+
+        button {
+            background-color: #f44336;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #d32f2f;
+        }
+        .red-button {
+            background-color: #f44336; /* this is your red color from the button style above */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: block; /* this will make it a block-level element */
+            margin: 20px auto;
+        }
+
+        .red-button:hover {
+            background-color: #d32f2f;
+        }
+
+    </style>
 </head>
 <body>
+<header class="header">
+    <div class="header-container">
+        <img th:src="@{/actum_logo.png}" alt="Actum Logo" class="header-logo">
+        <nav>
+            <ul>
+                <li>
+                    <a th:href = "@{/home}" class="nav-link">Home</a>
+                </li>
+                <li>
+                    <a th:href = "@{/logout}" class="nav-link">Logout</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="container">
 <h1 th:text="${frage.title}"></h1>
 
 <form id="ratingForm" action="/save-ratings" method="POST">
@@ -19,26 +237,22 @@
             <th>Vorschlag</th>
             <th>Beschreibung</th>
             <th>Rate</th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
         </tr>
         <tr th:each="vorschlag: ${frage.vorschlaege}">
             <td th:text="${vorschlag.text}"></td>
             <td th:text="${vorschlag.description}"></td>
             <td>
                 <div class="slider-container">
-                    <label>Fully Agree</label>
+                    <img th:src="@{/happy.png}" alt="Fully Agree" class="slider-image" id="happy-icon">
                     <div class="slider"></div>
-                    <label>Completely Disagree</label>
+                    <img th:src="@{/sad.png}" alt="Completely Disagree" class="slider-image" id="sad-icon">
                     <input type="hidden" th:name="'rating_'+${vorschlag.id}" th:id="'rating_'+${vorschlag.id}" />
                 </div>
                 <span class="slider-value">0</span>
             </td>
         </tr>
     </table>
-    <div class="anonymous-vote">
+    <div th:if="${!frage.isVorschlagPhase}" class="anonymous-vote">
         <input type="checkbox" name="anonymous" id="anonymous" />
         <label for="anonymous">Vote Anonymously</label>
     </div>
@@ -48,14 +262,15 @@
 </form>
 
 <form th:if="${userId == frage.user.id && frage.isVorschlagPhase}" class="button-container" th:action="@{'/toggleVorschlagPhase/' + ${frage.id}}" method="post">
-    <input type="submit" value="Ending Vorschlag Phase" />
+    <button type="submit" class="red-button">Vorschlagsphase beenden</button>
 </form>
-<div th:if="${frage.isVorschlagPhase}" class="button-container">
-    <a th:href="@{/createvorschlag(frageId = ${frage.id})}">Neue Vorschlag Eintragen</a>
-</div>
+    <div th:if="${frage.isVorschlagPhase}" class="button-container">
+        <a th:href="@{/createvorschlag(frageId = ${frage.id})}">Neue Vorschlag Eintragen</a>
+    </div>
 
 <div th:if="${alreadyRated}" class="error-message">
     You have already rated this Vorschlag.
+</div>
 </div>
 <style>
     .error-message {
@@ -66,13 +281,16 @@
 </style>
 <script>
     $(function () {
+        var isVorschlagPhase = [[${frage.isVorschlagPhase}]];
+
         $(".slider-container .slider").each(function () {
             var slider = $(this);
             slider.slider({
                 min: 0,
                 max: 10,
-                value:5,
                 range: "min",
+                value: 5,
+                disabled: isVorschlagPhase, // Disables the slider if isVorschlagPhase is true
                 create: function (event, ui) {
                     var value = slider.slider("value");
                     slider.parent().find('input').val(value);
@@ -105,6 +323,12 @@
             });
         });
     });
+</script>
+<script>
+    $("#ratingForm").on("submit", function() {
+        console.log("Form is being submitted!");
+    });
+
 </script>
 
 

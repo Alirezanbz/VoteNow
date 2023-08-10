@@ -9,16 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AntwortRepository extends CrudRepository<Antwort, Long> {
-    public List<Antwort> findAllByVorschlagId(Long vorschlagId);
+    List<Antwort> findAllByVorschlagId(Long vorschlagId);
     List<Antwort> findByVorschlagAndUser(Vorschlag vorschlag, User user);
-
     List<Antwort> findByVorschlagAndAnonymous(Vorschlag vorschlag, boolean anonymous);
-
     List<Antwort> findByVorschlagAndUserHash(Vorschlag vorschlag, String userHash);
-
-    List<Antwort> findByVorschlagAndUserOrUserHash(Vorschlag vorschlag, User user, String userHash);
-
-
-
     List<Antwort> findByUser(User user);
 }

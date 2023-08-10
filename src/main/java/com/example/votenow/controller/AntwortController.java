@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -37,10 +40,16 @@ public class AntwortController {
     }
 
     @PostMapping("/save-ratings")
-    public String saveRatings(@RequestParam Map<String, String> ratings, HttpServletRequest request, Model model) {
-        boolean hasUserAlreadyRated = false;
+    public String saveRatings(@RequestParam Map<String, String> ratings, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+        System.out.println("Received ratings: " + ratings);
+        Vorschlag lastProcessedVorschlag = null;
+
+        List<Vorschlag> alreadyRatedVorschlag = new ArrayList<>();
         boolean anonymousVote = "on".equalsIgnoreCase(ratings.get("anonymous")); // check if the anonymous checkbox is checked
         for (Map.Entry<String, String> entry : ratings.entrySet()) {
+
+            System.out.println("Processing entry: " + entry);
+
             String[] parts = entry.getKey().split("_");
 
             if (parts.length < 2) {
@@ -55,21 +64,25 @@ public class AntwortController {
             Long vorschlagId = Long.valueOf(parts[1]);
             Integer rating = Integer.valueOf(entry.getValue());
             if (saveRatingToDatabase(rating, vorschlagId, request, anonymousVote)) {
-                hasUserAlreadyRated = true;
+                alreadyRatedVorschlag.add(vorschlagService.getVorschlag(vorschlagId));
             }
+            lastProcessedVorschlag = vorschlagService.getVorschlag(vorschlagId);
         }
 
-        if (hasUserAlreadyRated) {
-            model.addAttribute("alreadyRated", true);
-            model.addAttribute("message", "You have already rated this Vorschlag.");
-            return "already-rated-message";
-        } else {
-            model.addAttribute("message", "You rated successfully.");
-            return "already-rated-message";
+        if (!alreadyRatedVorschlag.isEmpty()) {
+            String frageName = alreadyRatedVorschlag.get(0).getFrage().getTitle();
+            redirectAttributes.addFlashAttribute("popupMessage", "You have already rated the " + frageName + ".");
+            return "redirect:/home";
+        } else if (lastProcessedVorschlag != null) {
+            String frageName = lastProcessedVorschlag.getFrage().getTitle();
+            redirectAttributes.addFlashAttribute("popupMessage", "You rated the " + frageName + " successfully.");
+            return "redirect:/home";
         }
+        return "redirect:/home";
     }
 
     private boolean saveRatingToDatabase(Integer rating, Long vorschlagId, HttpServletRequest request, boolean anonymousVote) {
+
         System.out.println("Rating: " + rating);
 
         Vorschlag vorschlag = vorschlagService.getVorschlag(vorschlagId);
@@ -94,6 +107,7 @@ public class AntwortController {
             user = (User) session.getAttribute("loggedInUser");
             antwort.setUser(user);
         }
+        System.out.println("Processing vorschlagId: " + vorschlagId + ", User: " + user + ", UserHash: " + userHash + ", Anonymous: " + anonymousVote);
 
 
             // Check if the user has already voted
@@ -101,6 +115,7 @@ public class AntwortController {
                 System.out.println("User has already rated this vorschlag");
                 return true;
             }
+
 
 
 

@@ -8,6 +8,7 @@ import com.example.votenow.service.MailSenderService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,12 +26,15 @@ public class LoginController {
 
     private final MailSenderService mailSender;
 
+    private final BCryptPasswordEncoder encoder;
+
     ResetPasswordToken resetPasswordToken;
 
-    public LoginController(UserRepository userRepository, ResetPasswordTokenRepository resetPasswordTokenRepository, MailSenderService mailSender) {
+    public LoginController(UserRepository userRepository, ResetPasswordTokenRepository resetPasswordTokenRepository, MailSenderService mailSender, BCryptPasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.resetPasswordTokenRepository = resetPasswordTokenRepository;
         this.mailSender = mailSender;
+        this.encoder = encoder;
     }
 
     @GetMapping("/login")
@@ -44,8 +48,8 @@ public class LoginController {
     public String processLogin(@RequestParam("email") String email, @RequestParam("password") String password, Model model, HttpServletRequest request) {
         User user = userRepository.findByEmail(email);
 
-        if (user != null && user.getPassword().equals(password)) {
-            // Store user in session after successful login
+        if (user != null && encoder.matches(password, user.getPassword()) && user.isStatus() == true) {
+
             HttpSession session = request.getSession();
             session.setAttribute("loggedInUser", user);
 
@@ -121,7 +125,7 @@ public class LoginController {
         if (resetPasswordToken != null) {
 
             User user = resetPasswordToken.getUser();
-            user.setPassword(password);
+            user.setPassword(encoder.encode(password));
             userRepository.save(user);
             resetPasswordTokenRepository.delete(resetPasswordToken);
             model.addAttribute("message", "Your password has been updated.");
@@ -131,6 +135,13 @@ public class LoginController {
             model.addAttribute("error", "No account found with that email address.");
             return "error";
         }
+    }
+
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
     }
 
 
